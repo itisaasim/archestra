@@ -69,3 +69,4 @@ playwright-report/
 
 *.pyc
 __pycache__/
+tilt
