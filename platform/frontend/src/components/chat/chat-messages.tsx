@@ -29,6 +29,10 @@ import { extractFileAttachments, hasTextPart } from "./chat-messages.utils";
 import { EditableAssistantMessage } from "./editable-assistant-message";
 import { EditableUserMessage } from "./editable-user-message";
 import { InlineChatError } from "./inline-chat-error";
+import {
+  extractMCPUIResources,
+  MCPUIResourceComponent,
+} from "./mcp-ui-resource";
 import { PolicyDeniedTool } from "./policy-denied-tool";
 import { TodoWriteTool } from "./todo-write-tool";
 
@@ -684,6 +688,20 @@ function MessageTool({
         errorText={errorText}
       />
     );
+  }
+
+  // Check for MCP UI resources in the output
+  const output = toolResultPart?.output ?? part.output;
+  const mcpUIResources = extractMCPUIResources(output);
+
+  if (mcpUIResources.length > 0) {
+    return mcpUIResources.map((resource, idx) => (
+      <MCPUIResourceComponent
+        key={`${part.toolCallId}-mcp-ui-${idx}`}
+        resource={resource}
+        toolName={toolName}
+      />
+    ));
   }
 
   const hasInput = part.input && Object.keys(part.input).length > 0;
