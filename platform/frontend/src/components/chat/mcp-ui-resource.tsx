@@ -15,6 +15,7 @@ export interface MCPUIResource {
   mimeType:
     | "text/html"
     | "text/uri-list"
+    | "application/pdf"
     | "application/vnd.mcp-ui.remote-dom"
     | string;
   text?: string;
@@ -25,6 +26,31 @@ export interface MCPUIResourceProps {
   resource: MCPUIResource;
   toolName: string;
   onUIAction?: (action: UIActionResult) => Promise<unknown>;
+}
+
+/**
+ * Component to render PDF resources
+ * Displays PDF files in an iframe using the browser's native PDF viewer
+ */
+function PDFViewer({ resource }: { resource: MCPUIResource }) {
+  const pdfUrl = resource.text;
+
+  if (!pdfUrl) {
+    return (
+      <div className="p-4 text-sm text-muted-foreground">
+        No PDF URL provided
+      </div>
+    );
+  }
+
+  return (
+    <iframe
+      src={pdfUrl}
+      className="w-full border-0 rounded"
+      style={{ minHeight: "600px" }}
+      title="PDF Viewer"
+    />
+  );
 }
 
 /**
@@ -96,6 +122,24 @@ export function MCPUIResourceComponent({
     [onUIAction],
   );
 
+  // Handle PDF resources with native PDF viewer
+  if (resource.mimeType === "application/pdf") {
+    return (
+      <Tool className="cursor-default">
+        <ToolHeader
+          type={`tool-${toolName}`}
+          state="output-available"
+          isCollapsible={false}
+        />
+        <ToolContent>
+          <div className="w-full bg-background rounded-md border border-border overflow-hidden">
+            <PDFViewer resource={resource} />
+          </div>
+        </ToolContent>
+      </Tool>
+    );
+  }
+
   return (
     <Tool className="cursor-default">
       <ToolHeader
@@ -137,6 +181,7 @@ export function isMCPUIResource(obj: unknown): obj is MCPUIResource {
   const validMimeTypes = [
     "text/html",
     "text/uri-list",
+    "application/pdf",
     "application/vnd.mcp-ui.remote-dom",
   ];
 

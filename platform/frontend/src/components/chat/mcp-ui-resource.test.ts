@@ -34,6 +34,15 @@ describe("MCP UI Resource Utilities", () => {
       expect(isMCPUIResource(resource)).toBe(true);
     });
 
+    it("should return true for valid PDF resource", () => {
+      const resource: MCPUIResource = {
+        uri: "ui://test/pdf",
+        mimeType: "application/pdf",
+        text: "https://arxiv.org/pdf/2307.01683.pdf",
+      };
+      expect(isMCPUIResource(resource)).toBe(true);
+    });
+
     it("should return false for missing URI", () => {
       const resource = {
         mimeType: "text/html",
@@ -161,6 +170,33 @@ describe("MCP UI Resource Utilities", () => {
       ];
       const result = extractMCPUIResources(mixed);
       expect(result).toHaveLength(2);
+    });
+
+    it("should extract PDF resources", () => {
+      const resource: MCPUIResource = {
+        uri: "ui://test/pdf",
+        mimeType: "application/pdf",
+        text: "https://arxiv.org/pdf/2307.01683.pdf",
+      };
+      const result = extractMCPUIResources(resource);
+      expect(result).toHaveLength(1);
+      expect(result[0].mimeType).toBe("application/pdf");
+      expect(result[0].text).toBe("https://arxiv.org/pdf/2307.01683.pdf");
+    });
+
+    it("should extract PDF resources from nested structures", () => {
+      const nested = {
+        content: {
+          resource: {
+            uri: "ui://pdf/1",
+            mimeType: "application/pdf",
+            text: "https://example.com/document.pdf",
+          },
+        },
+      };
+      const result = extractMCPUIResources(nested);
+      expect(result).toHaveLength(1);
+      expect(result[0].mimeType).toBe("application/pdf");
     });
   });
 });

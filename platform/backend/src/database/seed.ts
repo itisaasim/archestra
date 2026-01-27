@@ -444,6 +444,148 @@ async function seedDefaultTeam(): Promise<void> {
   logger.info("✓ Assigned default team to default profile");
 }
 
+// /**
+//  * Seeds Three.js MCP server
+//  * Interactive 3D scene renderer using Three.js with streaming preview and MCP-UI integration
+//  */
+// async function seedThreeJsServer(): Promise<void> {
+//   const existing = await InternalMcpCatalogModel.findByName("threejs");
+//   const config = {
+//     command: "npx",
+//     arguments: [
+//       "-y",
+//       "--silent",
+//       "--registry=https://registry.npmjs.org/",
+//       "@modelcontextprotocol/server-threejs",
+//     ],
+//     transportType: "streamable-http",
+//     httpPort: 3001,
+//     httpPath: "/mcp",
+//   };
+
+//   if (existing) {
+//     // Update existing entry if config differs
+//     const needsUpdate =
+//       existing.localConfig?.httpPort !== 3001 ||
+//       existing.localConfig?.httpPath !== "/mcp";
+
+//     if (needsUpdate) {
+//       await InternalMcpCatalogModel.update(existing.id, {
+//         localConfig: config,
+//       });
+//       logger.info(
+//         "✓ Updated existing Three.js MCP server configuration (httpPort: 3001, httpPath: /mcp)",
+//       );
+//     } else {
+//       logger.info("✓ Three.js MCP server already exists in catalog, skipping");
+//     }
+//     return;
+//   }
+
+//   await InternalMcpCatalogModel.create({
+//     name: "threejs",
+//     description:
+//       "Interactive 3D scene renderer using Three.js. Demonstrates streaming code preview and real-time 3D visualization with support for animations, post-processing effects, and camera controls.",
+//     serverType: "local",
+//     localConfig: config,
+//     requiresAuth: false,
+//   });
+//   logger.info("✓ Seeded Three.js MCP server (threejs)");
+// }
+
+// /**
+//  * Seeds PDF Server MCP server
+//  * Provides tools to read and display PDF files with chunked data loading
+//  */
+// async function seedPdfServer(): Promise<void> {
+//   const existing = await InternalMcpCatalogModel.findByName("pdf");
+//   if (existing) {
+//     logger.info("✓ PDF Server already exists in catalog, skipping");
+//     return;
+//   }
+
+//   await InternalMcpCatalogModel.create({
+//     name: "pdf",
+//     description:
+//       "Interactive PDF viewer using PDF.js. Supports local files and remote URLs from academic sources (arxiv, biorxiv, zenodo, etc). Demonstrates chunked data loading, model context updates, and theming.",
+//     serverType: "local",
+//     localConfig: {
+//       command: "npx",
+//       arguments: [
+//         "-y",
+//         "--silent",
+//         "--registry=https://registry.npmjs.org/",
+//         "@modelcontextprotocol/server-pdf",
+//         "--stdio",
+//       ],
+//       transportType: "stdio",
+//     },
+//     requiresAuth: false,
+//   });
+//   logger.info("✓ Seeded PDF Server MCP server (pdf)");
+// }
+
+// /**
+//  * Seeds QR Code Server MCP server
+//  * Provides tools to generate customizable QR codes with interactive view
+//  */
+// async function seedQrServer(): Promise<void> {
+//   const existing = await InternalMcpCatalogModel.findByName("qr");
+//   if (existing) {
+//     logger.info("✓ QR Server already exists in catalog, skipping");
+//     return;
+//   }
+
+//   await InternalMcpCatalogModel.create({
+//     name: "qr",
+//     description:
+//       "QR Code generator server. Generates customizable QR codes from text or URLs with support for colors, size, and error correction. Includes interactive view UI for MCP-UI enabled clients.",
+//     serverType: "local",
+//     localConfig: {
+//       command: "bash",
+//       arguments: [
+//         "-c",
+//         "uv run https://github.com/modelcontextprotocol/ext-apps/raw/main/examples/qr-server/server.py --stdio",
+//       ],
+//       transportType: "stdio",
+//     },
+//     requiresAuth: false,
+//   });
+//   logger.info("✓ Seeded QR Server MCP server (qr)");
+// }
+
+// /**
+//  * Seeds Cohort Heatmap Server MCP server
+//  * Provides tools to display cohort retention data as interactive heatmaps
+//  */
+// async function seedCohortHeatmapServer(): Promise<void> {
+//   const existing = await InternalMcpCatalogModel.findByName("cohort-heatmap");
+//   if (existing) {
+//     logger.info("✓ Cohort Heatmap Server already exists in catalog, skipping");
+//     return;
+//   }
+
+//   await InternalMcpCatalogModel.create({
+//     name: "cohort-heatmap",
+//     description:
+//       "Cohort retention heatmap visualization. Displays customer retention data as an interactive heatmap showing retention percentages across cohorts and time periods with multiple metrics support.",
+//     serverType: "local",
+//     localConfig: {
+//       command: "npx",
+//       arguments: [
+//         "-y",
+//         "--silent",
+//         "--registry=https://registry.npmjs.org/",
+//         "@modelcontextprotocol/server-cohort-heatmap",
+//         "--stdio",
+//       ],
+//       transportType: "stdio",
+//     },
+//     requiresAuth: false,
+//   });
+//   logger.info("✓ Seeded Cohort Heatmap Server MCP server (cohort-heatmap)");
+// }
+
 /**
  * Seeds test MCP server for development
  * This creates a simple MCP server in the catalog that has one tool: print_archestra_test
@@ -524,6 +666,10 @@ export async function seedRequiredStartingData(): Promise<void> {
   await seedN8NSystemPrompt();
   await seedDefaultRegularPrompts();
   await seedArchestraCatalogAndTools();
+  // await seedThreeJsServer();
+  // await seedPdfServer();
+  // await seedQrServer();
+  // await seedCohortHeatmapServer();
   await seedTestMcpServer();
   await seedTeamTokens();
 }

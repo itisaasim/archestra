@@ -36,7 +36,18 @@ Render external websites in an iframe.
 }
 ```
 
-### 3. Remote DOM Resources (`application/vnd.mcp-ui.remote-dom`)
+### 3. PDF Resources (`application/pdf`)
+Display PDF documents from URLs using the browser's native PDF viewer.
+
+```json
+{
+  "uri": "ui://pdf/viewer",
+  "mimeType": "application/pdf",
+  "text": "https://arxiv.org/pdf/2307.01683.pdf"
+}
+```
+
+### 4. Remote DOM Resources (`application/vnd.mcp-ui.remote-dom`)
 Advanced interactive components using Shopify's remote-dom technology.
 
 ```json
@@ -103,6 +114,64 @@ html_resource = McpUiServer.create_ui_resource(
   encoding: :text
 )
 ```
+
+### PDF Resources
+
+To display a PDF document, return a resource with `application/pdf` MIME type and a URL to the PDF:
+
+#### TypeScript/JavaScript
+
+```typescript
+// Simple PDF viewer from a URL
+return {
+  content: [{
+    type: 'resource',
+    resource: {
+      uri: 'ui://pdf/viewer',
+      mimeType: 'application/pdf',
+      text: 'https://arxiv.org/pdf/2307.01683.pdf'
+    }
+  }]
+};
+```
+
+#### Python
+
+```python
+# Display PDF from URL
+return {
+  "content": [{
+    "type": "resource",
+    "resource": {
+      "uri": "ui://pdf/viewer",
+      "mimeType": "application/pdf",
+      "text": "https://arxiv.org/pdf/2307.01683.pdf"
+    }
+  }]
+}
+```
+
+#### Ruby
+
+```ruby
+# Display PDF from URL
+{
+  content: [{
+    type: 'resource',
+    resource: {
+      uri: 'ui://pdf/viewer',
+      mimeType: 'application/pdf',
+      text: 'https://arxiv.org/pdf/2307.01683.pdf'
+    }
+  }]
+}
+```
+
+**Notes:**
+- The PDF URL must be publicly accessible or support CORS headers
+- The browser's native PDF viewer will be used
+- PDFs from academic sources (arXiv, bioRxiv, etc.) are supported
+- For large PDFs, consider using chunked loading or progressive rendering
 
 ## UI Actions and Interactivity
 

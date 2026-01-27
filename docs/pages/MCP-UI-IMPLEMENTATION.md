@@ -14,7 +14,8 @@ Successfully implemented full support for the MCP UI specification in Archestra 
 
 #### `MCPUIResourceComponent` ([`frontend/src/components/chat/mcp-ui-resource.tsx`](frontend/src/components/chat/mcp-ui-resource.tsx))
 Main component for rendering MCP UI resources with:
-- Support for HTML, external URL, and remote-dom content types
+- Support for HTML, external URL, PDF, and remote-dom content types
+- Native PDF viewer integration for `application/pdf` resources
 - Comprehensive UI action handling (tool calls, prompts, intents, notifications, links)
 - Toast notifications for user feedback
 - Proper error handling and logging
@@ -37,6 +38,7 @@ Updated message rendering to:
 #### Content Types
 - ✅ `text/html` - Inline HTML in sandboxed iframe
 - ✅ `text/uri-list` - External URLs in iframe
+- ✅ `application/pdf` - PDF documents using browser native viewer
 - ✅ `application/vnd.mcp-ui.remote-dom` - Remote-DOM components
 
 #### UI Actions
@@ -55,11 +57,12 @@ Updated message rendering to:
 
 ### 5. Testing ✅
 
-Comprehensive test suite ([`frontend/src/components/chat/mcp-ui-resource.test.ts`](frontend/src/components/chat/mcp-ui-resource.test.ts)) with **15 passing tests**:
+Comprehensive test suite ([`frontend/src/components/chat/mcp-ui-resource.test.ts`](frontend/src/components/chat/mcp-ui-resource.test.ts)) with **18 passing tests**:
 
 #### Type Guard Tests
 - Valid HTML resources
 - Valid external URL resources
+- Valid PDF resources
 - Valid remote-dom resources
 - Invalid resources (missing uri, mimeType, content)
 - Invalid MIME types
@@ -69,6 +72,7 @@ Comprehensive test suite ([`frontend/src/components/chat/mcp-ui-resource.test.ts
 - Resources from JSON strings
 - Resources from arrays
 - Resources from nested objects
+- PDF resources from nested structures
 - Null/undefined handling
 - Invalid JSON handling
 - Mixed valid/invalid resources in arrays
